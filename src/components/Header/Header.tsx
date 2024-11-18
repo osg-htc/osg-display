@@ -18,7 +18,7 @@ const Header = () => {
         paddingX="15px"
       >
         <Image
-          src="/osg.png"
+          src="osg.png"
           width={315 * 0.6}
           height={70 * 0.6}
           alt="OSG Logo"
