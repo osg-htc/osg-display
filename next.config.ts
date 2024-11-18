@@ -5,8 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  assetPrefix: "/osg-display/", // while being deployed on a test github pages
-  basePath: "/osg-display/", // while being deployed on a test github pages
+  assetPrefix: "/osg-display", // while being deployed on a test github pages
+  basePath: "/osg-display", // while being deployed on a test github pages
 };
 
 export default nextConfig;
