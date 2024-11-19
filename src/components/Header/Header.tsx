@@ -16,6 +16,7 @@ const Header = () => {
         alignItems="center"
         paddingY="5px"
         paddingX="15px"
+        className={style.headerContent}
       >
         <Image
           src="osg.png"

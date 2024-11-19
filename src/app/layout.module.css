@@ -1,0 +1,9 @@
+.contentContainer {
+  flex-direction: row;
+}
+
+@media only screen and (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+}

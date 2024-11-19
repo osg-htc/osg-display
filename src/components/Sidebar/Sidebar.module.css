@@ -1,0 +1,17 @@
+.rowLabel {
+  background-color: lightgray;
+  font-weight: bold;
+  padding: 5px 15px;
+}
+
+.rowContainer {
+  padding: 5px 20px;
+  border-top: 1px solid lightgray;
+}
+
+.rowNumber {
+  display: inline-block;
+  width: 50%;
+  font-weight: bold;
+  text-align: right;
+}
