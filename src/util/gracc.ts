@@ -2,7 +2,7 @@ import { Root } from "./graccResponse";
 
 const endpoint = "https://gracc.opensciencegrid.org:443/q";
 const rawIndex = "gracc.osg.raw";
-const summaryIndex = "gracc.osg.raw";
+const summaryIndex = "gracc.osg.summary";
 
 /**
  * The timespan for the histogram.

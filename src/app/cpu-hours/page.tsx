@@ -1,10 +1,18 @@
 import { getSSGReports } from "@/src/util/gracc";
-import CPUHours from "./cpuHours";
+import ChartContainer from "@/src/components/ChartContainer";
 
-const Page = async () => {
+const CPUHoursPage = async () => {
   const reports = await getSSGReports();
 
-  return <CPUHours fallback={reports} />;
+  return (
+    <ChartContainer
+      fallback={reports}
+      jobs={false}
+      cpuHours={true}
+      description="CPU Hours"
+      saveName="cpuHours"
+    />
+  );
 };
 
-export default Page;
+export default CPUHoursPage;

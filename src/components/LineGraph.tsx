@@ -6,26 +6,34 @@ import {
   Timespan,
 } from "../util/gracc";
 
+import { Box } from "@mui/material";
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
 import useSWR from "swr";
-import { Box } from "@mui/material";
 
 type Props = {
   fallback: GeneratedReports;
   jobs: boolean;
   cpuHours: boolean;
+  chartTitle: string;
   timespan: Timespan;
   chartRef: React.ComponentProps<typeof Line>["ref"];
 };
 
-const LineGraph = (props: Props) => {
+const LineGraph = ({
+  fallback,
+  jobs,
+  cpuHours,
+  chartTitle,
+  timespan,
+  chartRef,
+}: Props) => {
   const { data, isLoading, error } = useSWR(
     "generateReports",
     async () => await generateReports(),
     {
-      fallbackData: props.fallback,
-      refreshInterval: 1000 * 60 * 5,
+      fallbackData: fallback,
+      refreshInterval: 1000 * 60 * 15, // refresh every 15 minutes
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -60,22 +68,17 @@ const LineGraph = (props: Props) => {
     );
   }
 
-  const options = generateOptions(
-    data[props.timespan],
-    props.jobs,
-    props.cpuHours
-  );
+  const options = generateOptions(data[timespan], jobs, cpuHours, chartTitle);
+
   return (
     <Box bgcolor="white">
       <Line
         {...options}
         plugins={[chartBackgroundColorPlugin]}
-        ref={props.chartRef}
+        ref={chartRef}
       />
     </Box>
   );
-
-  return <div>LineGraph</div>;
 };
 
 function formatDate(date: string, timespan: Timespan): string {
@@ -92,8 +95,11 @@ function formatDate(date: string, timespan: Timespan): string {
 function generateOptions(
   data: AnalysisResult,
   jobs: boolean,
-  cpuHours: boolean
+  cpuHours: boolean,
+  chartTitle: string
 ): React.ComponentProps<typeof Line> {
+  const fontSize = 18;
+  const titleSize = 24;
   const datasets = [];
 
   if (jobs) {
@@ -110,7 +116,7 @@ function generateOptions(
   }
 
   const yLabel =
-    jobs && cpuHours ? "Jobs/CPU Hours" : jobs ? "Jobs" : "CPU Hours";
+    jobs && cpuHours ? "Jobs and CPU Hours" : jobs ? "Jobs" : "CPU Hours";
 
   return {
     data: {
@@ -129,12 +135,20 @@ function generateOptions(
           mode: "index",
           intersect: false,
         },
+        title: {
+          display: true,
+          text: chartTitle,
+          align: "start",
+          font: { size: titleSize },
+        },
       },
       scales: {
         x: {
           title: {
             display: true,
             text: "Timestamp",
+            font: { size: fontSize },
+            padding: { top: 10, bottom: 10 },
           },
           ticks: {
             autoSkip: true,
@@ -146,6 +160,8 @@ function generateOptions(
           title: {
             display: true,
             text: yLabel,
+            font: { size: fontSize },
+            padding: { top: 10, bottom: 10 },
           },
         },
       },

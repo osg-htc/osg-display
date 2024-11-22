@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import type { Metadata } from "next";
 import Header from "../components/Header/Header";
-import Sidebar, { TimeData } from "../components/Sidebar/Sidebar";
+import RawSidebar, { TimeData } from "../components/Sidebar/Sidebar";
 import "./globals.css";
 import style from "./layout.module.css";
 
@@ -36,7 +36,7 @@ export default function RootLayout({
             {children}
           </Box>
           <Box p="20px">
-            <Sidebar data={sampleSidebarData} />
+            <RawSidebar data={sampleSidebarData} />
           </Box>
         </Box>
       </body>
