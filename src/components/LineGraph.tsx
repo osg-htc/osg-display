@@ -1,30 +1,30 @@
-"use client";
-
+import React from "react";
 import {
   AnalysisResult,
   GeneratedReports,
   generateReports,
   Timespan,
-} from "@/src/util/gracc";
-import { Box } from "@mui/material";
-import useSWR from "swr";
+} from "../util/gracc";
 
 import "chart.js/auto";
 import { Line } from "react-chartjs-2";
-import { ForwardedRef } from "react";
+import useSWR from "swr";
+import { Box } from "@mui/material";
 
 type Props = {
   fallback: GeneratedReports;
+  jobs: boolean;
+  cpuHours: boolean;
   timespan: Timespan;
   chartRef: React.ComponentProps<typeof Line>["ref"];
 };
 
-const CPUHoursGraph = ({ fallback, timespan, chartRef }: Props) => {
+const LineGraph = (props: Props) => {
   const { data, isLoading, error } = useSWR(
     "generateReports",
     async () => await generateReports(),
     {
-      fallbackData: fallback,
+      fallbackData: props.fallback,
       refreshInterval: 1000 * 60 * 5,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
@@ -60,16 +60,22 @@ const CPUHoursGraph = ({ fallback, timespan, chartRef }: Props) => {
     );
   }
 
-  const options = generateOptions(data[timespan]);
+  const options = generateOptions(
+    data[props.timespan],
+    props.jobs,
+    props.cpuHours
+  );
   return (
     <Box bgcolor="white">
       <Line
         {...options}
         plugins={[chartBackgroundColorPlugin]}
-        ref={chartRef}
+        ref={props.chartRef}
       />
     </Box>
   );
+
+  return <div>LineGraph</div>;
 };
 
 function formatDate(date: string, timespan: Timespan): string {
@@ -84,19 +90,34 @@ function formatDate(date: string, timespan: Timespan): string {
 }
 
 function generateOptions(
-  data: AnalysisResult
+  data: AnalysisResult,
+  jobs: boolean,
+  cpuHours: boolean
 ): React.ComponentProps<typeof Line> {
+  const datasets = [];
+
+  if (jobs) {
+    datasets.push({
+      label: "Jobs",
+      data: data.dataPoints.map((point) => point.nJobs),
+    });
+  }
+  if (cpuHours) {
+    datasets.push({
+      label: "CPU Hours",
+      data: data.dataPoints.map((point) => point.cpuHours),
+    });
+  }
+
+  const yLabel =
+    jobs && cpuHours ? "Jobs/CPU Hours" : jobs ? "Jobs" : "CPU Hours";
+
   return {
     data: {
       labels: data.dataPoints.map((point) =>
         formatDate(point.timestamp, "daily")
       ),
-      datasets: [
-        {
-          label: "CPU Hours",
-          data: data.dataPoints.map((point) => point.cpuHours),
-        },
-      ],
+      datasets,
     },
     options: {
       responsive: true,
@@ -124,7 +145,7 @@ function generateOptions(
           min: 0,
           title: {
             display: true,
-            text: "CPU Hours",
+            text: yLabel,
           },
         },
       },
@@ -144,4 +165,4 @@ const chartBackgroundColorPlugin = {
   },
 };
 
-export default CPUHoursGraph;
+export default LineGraph;

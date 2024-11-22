@@ -1,9 +1,9 @@
 "use client";
 
 import { GeneratedReports, Timespan } from "@/src/util/gracc";
-import CPUHoursGraph from "./cpuHoursGraph";
 import { Box, Button, ButtonGroup } from "@mui/material";
 import { useRef, useState } from "react";
+import LineGraph from "@/src/components/LineGraph";
 
 type Props = {
   fallback: GeneratedReports;
@@ -57,8 +57,10 @@ const CPUHours = ({ fallback }: Props) => {
         </Box>
       </Box>
 
-      <CPUHoursGraph
+      <LineGraph
         fallback={fallback}
+        jobs={true}
+        cpuHours={false}
         timespan={timespan}
         chartRef={chartRef}
       />
