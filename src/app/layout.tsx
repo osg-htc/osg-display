@@ -28,12 +28,13 @@ export default function RootLayout({
         <Header />
         <Box
           mt="10px"
-          ml="10px"
           display="flex"
           height="85%"
           className={style.contentContainer}
         >
-          <Box width="100%">{children}</Box>
+          <Box ml="10px" width="100%">
+            {children}
+          </Box>
           <Box p="20px">
             <Sidebar data={sampleSidebarData} />
           </Box>

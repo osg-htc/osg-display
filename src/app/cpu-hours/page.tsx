@@ -1,10 +1,10 @@
-"use client";
+import { getSSGReports } from "@/src/util/gracc";
+import CPUHours from "./cpuHours";
 
-import React, { useState } from "react";
+const Page = async () => {
+  const reports = await getSSGReports();
 
-const CPUHoursPage = () => {
-  const [a] = useState(1);
-  return <div>CPUHoursPage: {a}</div>;
+  return <CPUHours fallback={reports} />;
 };
 
-export default CPUHoursPage;
+export default Page;
