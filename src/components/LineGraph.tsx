@@ -28,7 +28,7 @@ const LineGraph = ({
   timespan,
   chartRef,
 }: Props) => {
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading } = useSWR(
     "generateReports",
     async () => await generateReports(),
     {
@@ -54,7 +54,7 @@ const LineGraph = ({
     );
   }
 
-  if (error || !data) {
+  if (!data) {
     return (
       <Box
         width="100%"
@@ -63,7 +63,7 @@ const LineGraph = ({
         justifyContent="center"
         alignItems="center"
       >
-        Error
+        <i>Failed to load data</i>
       </Box>
     );
   }
