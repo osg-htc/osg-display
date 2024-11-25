@@ -96,16 +96,12 @@ function formatDate(date: Date, timespan: Timespan): string {
       return date.toLocaleString("en-US", {
         month: "numeric",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
         year: "numeric",
       });
     case "yearly":
       return date.toLocaleString("en-US", {
         month: "numeric",
         day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
         year: "numeric",
       });
   }
@@ -155,6 +151,9 @@ function generateOptions(
     },
     options: {
       responsive: true,
+      animation: {
+        duration: 0,
+      },
       plugins: {
         legend: {
           position: "top",
