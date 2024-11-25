@@ -1,12 +1,12 @@
 .rowLabel {
-  background-color: lightgray;
+  background-color: var(--lightgray);
   font-weight: bold;
   padding: 5px 15px;
 }
 
 .rowContainer {
   padding: 5px 20px;
-  border-top: 1px solid lightgray;
+  border-top: 1px solid var(--lightgray);
 }
 
 .rowNumber {
@@ -20,4 +20,11 @@
   .contentContainer {
     flex-direction: column;
   }
+}
+
+.footer {
+  border-top: 5px solid var(--accent);
+  background-color: var(--darkgray);
+  color: var(--foreground);
+  width: 100%;
 }

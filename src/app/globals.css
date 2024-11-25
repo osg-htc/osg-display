@@ -4,6 +4,9 @@ body {
   --foreground: #ffffff;
   --accent: #ffa500;
 
+  --lightgray: #d3d3d3;
+  --darkgray: #222;
+
   width: 100vw;
   height: 100vh;
   margin: 0;

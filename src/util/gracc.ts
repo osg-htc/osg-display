@@ -34,6 +34,7 @@ export type AnalysisResult = {
  * The daily, monthly, and yearly reports for CPU Hours and Job Count.
  */
 export type GeneratedReports = {
+  generatedAt: string;
   daily: AnalysisResult;
   monthly: AnalysisResult;
   yearly: AnalysisResult;
@@ -46,19 +47,22 @@ export type GeneratedReports = {
  * @param start the start date for the query
  * @param end the end date for the query
  * @param interval the interval for the histogram
+ * @param offset the offset for the histogram in ms. Does not assume the sign.
  * @param index the index to query. The raw index (`gracc.osg.raw`) is used for
  *        more detailed time data, while the summary index (`gracc.osg.summary`)
  *        is used for more broader data
  * @returns the analysis result
  */
 async function graccQuery(
-  start: string | Date,
-  end: string | Date,
+  start: Date,
+  end: Date,
   interval: string,
+  offset: number,
   index: string
 ): Promise<AnalysisResult> {
-  const startStr = typeof start === "string" ? start : start.toISOString();
-  const endStr = typeof end === "string" ? end : end.toISOString();
+  const startStr = start.toISOString();
+  const endStr = end.toISOString();
+  const offsetStr = `${offset}ms`;
 
   // perform query
 
@@ -104,6 +108,7 @@ async function graccQuery(
         date_histogram: {
           field: "EndTime",
           fixed_interval: interval,
+          offset: offsetStr,
           extended_bounds: {
             min: startStr,
             max: endStr,
@@ -169,21 +174,31 @@ async function graccQuery(
  * @returns the generated reports
  */
 export async function generateReports(date?: Date): Promise<GeneratedReports> {
-  const end = date ?? new Date();
-
+  // -1 is used for the end date to ensure the next hour isn't counted
+  // +1 is used for the start date to ensure the previous hour isn't counted
+  
+  date = date ?? new Date();
+  
   // 1 day ago
-  let start = new Date(end.getTime() - 1000 * 60 * 60 * 24);
-  const daily = await graccQuery(start, end, "1h", rawIndex);
+  let offset = -Math.floor(date.getTime() % (1000 * 60 * 60)); // get the amount of milliseconds in the current hour  
+  let end = new Date(date.getTime() + offset - 1); // round to the nearest hour
+  let start = new Date(end.getTime() - 1000 * 60 * 60 * 24 + 1);
+  const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
   // 30 days ago
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30);
-  const monthly = await graccQuery(start, end, "1d", summaryIndex);
+  offset = -Math.floor(date.getTime() % (1000 * 60 * 60 * 24)); // get the amount of milliseconds in the current day
+  end = new Date(date.getTime() + offset - 1); // round to the nearest day
+  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1);
+  const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
 
   // 365 days ago
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 365);
-  const yearly = await graccQuery(start, end, "30d", summaryIndex);
+  offset = -Math.floor(date.getTime() % (1000 * 60 * 60 * 24 * 30)); // get the amount of milliseconds in the current month
+  end = new Date(date.getTime() + offset - 1); // round to the nearest month
+  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 365 + 1);
+  const yearly = await graccQuery(start, end, "30d", 0, summaryIndex);
 
   return {
+    generatedAt: date.toISOString(),
     daily,
     monthly,
     yearly,

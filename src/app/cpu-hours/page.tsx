@@ -7,8 +7,8 @@ const CPUHoursPage = async () => {
   return (
     <ChartContainer
       fallback={reports}
-      jobs={false}
-      cpuHours={true}
+      includeJobs={false}
+      includeCpuHours={true}
       description="CPU Hours"
       saveName="cpuHours"
     />

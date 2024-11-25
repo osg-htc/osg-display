@@ -13,8 +13,8 @@ import useSWR from "swr";
 
 type Props = {
   fallback: GeneratedReports;
-  jobs: boolean;
-  cpuHours: boolean;
+  includeJobs: boolean;
+  includeCpuHours: boolean;
   chartTitle: string;
   timespan: Timespan;
   chartRef: React.ComponentProps<typeof Line>["ref"];
@@ -22,8 +22,8 @@ type Props = {
 
 const LineGraph = ({
   fallback,
-  jobs,
-  cpuHours,
+  includeJobs,
+  includeCpuHours,
   chartTitle,
   timespan,
   chartRef,
@@ -33,7 +33,7 @@ const LineGraph = ({
     async () => await generateReports(),
     {
       fallbackData: fallback,
-      refreshInterval: 1000 * 60 * 15, // refresh every 15 minutes
+      refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -68,47 +68,73 @@ const LineGraph = ({
     );
   }
 
-  const options = generateOptions(data[timespan], jobs, cpuHours, chartTitle);
+  const options = generateOptions(
+    data[timespan],
+    timespan,
+    includeJobs,
+    includeCpuHours,
+    chartTitle
+  );
 
   return (
     <Box bgcolor="white">
-      <Line
-        {...options}
-        plugins={[chartBackgroundColorPlugin]}
-        ref={chartRef}
-      />
+      <Line {...options} ref={chartRef} />
     </Box>
   );
 };
 
-function formatDate(date: string, timespan: Timespan): string {
-  const d = new Date(date);
-  return d.toLocaleString("en-US", {
-    month: "numeric",
-    day: "numeric",
-    year: timespan === "daily" ? undefined : "numeric",
-    hour: timespan === "daily" ? "numeric" : undefined,
-    minute: timespan === "daily" ? "numeric" : undefined,
-  });
+function formatDate(date: Date, timespan: Timespan): string {
+  switch (timespan) {
+    case "daily":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+    case "monthly":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        year: "numeric",
+      });
+    case "yearly":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        year: "numeric",
+      });
+  }
 }
 
 function generateOptions(
   data: AnalysisResult,
-  jobs: boolean,
-  cpuHours: boolean,
+  timespan: Timespan,
+  includeJobs: boolean,
+  includeCpuHours: boolean,
   chartTitle: string
 ): React.ComponentProps<typeof Line> {
   const fontSize = 18;
   const titleSize = 24;
+
+  const labels = data.dataPoints.map((point) =>
+    formatDate(new Date(point.timestamp), timespan)
+  );
+
   const datasets = [];
 
-  if (jobs) {
+  if (includeJobs) {
     datasets.push({
       label: "Jobs",
       data: data.dataPoints.map((point) => point.nJobs),
     });
   }
-  if (cpuHours) {
+
+  if (includeCpuHours) {
     datasets.push({
       label: "CPU Hours",
       data: data.dataPoints.map((point) => point.cpuHours),
@@ -116,13 +142,15 @@ function generateOptions(
   }
 
   const yLabel =
-    jobs && cpuHours ? "Jobs and CPU Hours" : jobs ? "Jobs" : "CPU Hours";
+    includeJobs && includeCpuHours
+      ? "Jobs and CPU Hours"
+      : includeJobs
+      ? "Jobs"
+      : "CPU Hours";
 
   return {
     data: {
-      labels: data.dataPoints.map((point) =>
-        formatDate(point.timestamp, "daily")
-      ),
+      labels,
       datasets,
     },
     options: {
@@ -166,6 +194,7 @@ function generateOptions(
         },
       },
     },
+    plugins: [chartBackgroundColorPlugin],
   };
 }
 

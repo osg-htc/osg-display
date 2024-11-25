@@ -7,34 +7,35 @@ import LineGraph from "./LineGraph";
 
 type Props = {
   fallback: GeneratedReports;
-  jobs: boolean;
-  cpuHours: boolean;
+  includeJobs: boolean;
+  includeCpuHours: boolean;
   saveName: string;
   description: string;
 };
 
 const ChartContainer = ({
   fallback,
-  jobs,
-  cpuHours,
+  includeJobs,
+  includeCpuHours,
   saveName,
   description,
 }: Props) => {
-  // reference to the chart, used for saving
-  const chartRef = useRef<any>(null);
   // the timespan for the histogram
   const [timespan, setTimespan] = useState<Timespan>("yearly");
+  // reference to the chart, used for save to disk
+  const chartRef = useRef<any>(null);
 
   function handleSave() {
     if (!chartRef.current) return;
 
-    // create a link element to download, and click it
     const date = new Date().toISOString().split("T")[0];
 
+    // create a link element to download, and click it
     const link = document.createElement("a");
     link.download = `${saveName}-${date}.png`;
     link.href = chartRef.current.toBase64Image("image/png", 1);
     link.click();
+    link.remove();
   }
 
   return (
@@ -48,27 +49,21 @@ const ChartContainer = ({
           <ToggleButton
             value="daily"
             aria-label="24 Hours"
-            onClick={() => {
-              setTimespan("daily");
-            }}
+            onClick={() => setTimespan("daily")}
           >
             24 Hours
           </ToggleButton>
           <ToggleButton
             value="monthly"
             aria-label="30 Days"
-            onClick={() => {
-              setTimespan("monthly");
-            }}
+            onClick={() => {setTimespan("monthly")}}
           >
             30 Days
           </ToggleButton>
           <ToggleButton
             value="yearly"
             aria-label="12 Months"
-            onClick={() => {
-              setTimespan("yearly");
-            }}
+            onClick={() => {setTimespan("yearly")}}
           >
             12 Months
           </ToggleButton>
@@ -82,8 +77,8 @@ const ChartContainer = ({
 
       <LineGraph
         fallback={fallback}
-        jobs={jobs}
-        cpuHours={cpuHours}
+        includeJobs={includeJobs}
+        includeCpuHours={includeCpuHours}
         chartTitle={
           description +
           " / " +

@@ -8,8 +8,8 @@ const JobsPage = async () => {
   return (
     <ChartContainer
       fallback={reports}
-      jobs={true}
-      cpuHours={false}
+      includeJobs={true}
+      includeCpuHours={false}
       description="Job Count"
       saveName="jobCount"
     />

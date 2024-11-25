@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import style from "./Header.module.css";
-import SourceButtons from "./SourceButtons";
+import { Button, ButtonGroup, Link } from "@mui/material";
 
 const Header = () => {
   return (
@@ -24,7 +24,21 @@ const Header = () => {
           height={70 * 0.6}
           alt="OSG Logo"
         />
-        <SourceButtons />
+        <ButtonGroup variant="outlined" aria-label="Information Sources">
+          <Button
+            LinkComponent={Link}
+            href="/status-map"
+            aria-label="Status Map"
+          >
+            Status Map
+          </Button>
+          <Button LinkComponent={Link} href="/jobs" aria-label="Jobs">
+            Jobs
+          </Button>
+          <Button LinkComponent={Link} href="/cpu-hours" aria-label="CPU Hours">
+            CPU Hours
+          </Button>
+        </ButtonGroup>
         <span className={style.tagline}>
           A national, distributed computing partnership for data-intensive
           research
