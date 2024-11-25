@@ -27,15 +27,15 @@ const Header = () => {
         <ButtonGroup variant="outlined" aria-label="Information Sources">
           <Button
             LinkComponent={Link}
-            href="/status-map"
+            href="status-map"
             aria-label="Status Map"
           >
             Status Map
           </Button>
-          <Button LinkComponent={Link} href="/jobs" aria-label="Jobs">
+          <Button LinkComponent={Link} href="jobs" aria-label="Jobs">
             Jobs
           </Button>
-          <Button LinkComponent={Link} href="/cpu-hours" aria-label="CPU Hours">
+          <Button LinkComponent={Link} href="cpu-hours" aria-label="CPU Hours">
             CPU Hours
           </Button>
         </ButtonGroup>
