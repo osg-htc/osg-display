@@ -4,7 +4,7 @@ import { GeneratedReports, generateReports } from "@/src/util/gracc";
 import { Box } from "@mui/material";
 import useSWR from "swr";
 import style from "./InnerSidebar.module.css";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 type SidebarData = {
   title: string;
@@ -29,6 +29,16 @@ const InnerSidebar = ({ fallbackData }: Props) => {
     }
   );
 
+  const [lastUpdated, setLastUpdated] = useState<string>("");
+  const [tableElements, setTableElements] = useState<JSX.Element[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setLastUpdated(new Date(data.generatedAt).toLocaleString());
+      setTableElements(generateTableElements(generateSidebarData(data)));
+    }
+  }, [data]);
+
   return (
     <Box width="350px" height="100%" bgcolor="white" mx="auto">
       {isLoading ? (
@@ -40,10 +50,10 @@ const InnerSidebar = ({ fallbackData }: Props) => {
           flexDirection="column"
           justifyContent="space-around"
         >
-          <Box>{generateTableElements(generateSidebarData(data))}</Box>
+          <Box>{tableElements}</Box>
           <Box className={style.rowLabel} mt="auto">
             <span style={{ display: "block" }}>
-              Last updated: {new Date(data.generatedAt).toLocaleString()}
+              Last updated: {lastUpdated}
             </span>
           </Box>
         </Box>
