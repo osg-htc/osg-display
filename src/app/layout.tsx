@@ -19,8 +19,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <Box display="flex" height="90%" className={style.contentContainer}>
-          <Box m="10px" width="100%">
+        <Box display="flex" height="85%" className={style.contentContainer}>
+          <Box m="10px" width="100%" className={style.childContainer}>
             {children}
           </Box>
           <Box mt="10px">

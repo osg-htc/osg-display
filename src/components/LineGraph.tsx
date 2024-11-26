@@ -76,11 +76,7 @@ const LineGraph = ({
     chartTitle
   );
 
-  return (
-    <Box bgcolor="white">
-      <Line {...options} ref={chartRef} />
-    </Box>
-  );
+  return <Box height="90%"><Line {...options} ref={chartRef} /></Box>;
 };
 
 function formatDate(date: Date, timespan: Timespan): string {
@@ -150,7 +146,9 @@ function generateOptions(
       datasets,
     },
     options: {
+      normalized: true,
       responsive: true,
+      maintainAspectRatio: false,
       animation: {
         duration: 0,
       },

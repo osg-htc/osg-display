@@ -40,7 +40,7 @@ const InnerSidebar = ({ fallbackData }: Props) => {
   }, [data]);
 
   return (
-    <Box width="350px" height="100%" bgcolor="white" mx="auto">
+    <Box className={style.container} width="300px" height="100%" bgcolor="white" mx="auto">
       {isLoading ? (
         <></>
       ) : (

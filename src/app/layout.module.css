@@ -2,8 +2,17 @@
   flex-direction: row;
 }
 
+/* mobile */
 @media only screen and (max-width: 768px) {
   .contentContainer {
     flex-direction: column;
   }
+
+  .childContainer {
+    margin: 0px;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
 }

@@ -12,7 +12,7 @@ const Header = () => {
     >
       <Box
         display="flex"
-        justifyContent="space-between"
+        justifyContent="space-around"
         alignItems="center"
         paddingY="5px"
         paddingX="15px"

@@ -39,7 +39,7 @@ const ChartContainer = ({
   }
 
   return (
-    <Box p="10px" bgcolor="white">
+    <Box height="100%" p="10px" bgcolor="white">
       <Box display="flex" justifyContent="space-between">
         <ToggleButtonGroup
           color="primary"
@@ -74,6 +74,8 @@ const ChartContainer = ({
           </Button>
         </Box>
       </Box>
+
+      {/* <Box height="100%">wow</Box> */}
 
       <LineGraph
         fallback={fallback}

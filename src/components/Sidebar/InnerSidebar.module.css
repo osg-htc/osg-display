@@ -1,3 +1,7 @@
+.container {
+  width: 300px;
+}
+
 .rowLabel {
   background-color: var(--lightgray);
   font-weight: bold;
@@ -16,9 +20,22 @@
   text-align: right;
 }
 
+/* mobile */
 @media only screen and (max-width: 768px) {
   .contentContainer {
     flex-direction: column;
+  }
+
+  .container {
+    margin-top: 25px;
+    width: 80%;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    width: 250px;
   }
 }
 
