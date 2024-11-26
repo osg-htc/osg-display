@@ -129,7 +129,7 @@ async function graccQuery(
     },
   };
 
-  const res = await fetch(`${endpoint}/${index}/_search?pretty`, {
+  const res = await fetch(`${endpoint}/${index}/_search`, {
     method: "POST",
     body: JSON.stringify(query),
     headers: [["Content-Type", "application/json"]],
