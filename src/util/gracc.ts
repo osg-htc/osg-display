@@ -112,10 +112,6 @@ async function graccQuery(
           field: "EndTime",
           interval: interval,
           offset: offsetStr,
-          extended_bounds: {
-            min: startStr,
-            max: endStr,
-          },
         },
         aggs: {
           CoreHours: {
@@ -194,11 +190,13 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1); // subtract 30 days
   const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
 
-  // 365 days ago
-  offset = 0;
-  end = new Date(date.getTime() - offset - 1); // round to the nearest day
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 365 + 1); // subtract 365 days
-  const yearly = await graccQuery(start, end, "30d", 0, summaryIndex);
+  // 1 year ago
+  start = new Date(date);
+  start.setFullYear(date.getFullYear() - 1);
+  start.setDate(1);
+  end = new Date(date);
+  console.log(start.toISOString());
+  const yearly = await graccQuery(start, end, "month", 1000 * 60 * 60 * 24, summaryIndex);
 
   return {
     generatedAt: date.toISOString(),
