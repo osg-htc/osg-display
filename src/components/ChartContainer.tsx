@@ -56,14 +56,18 @@ const ChartContainer = ({
           <ToggleButton
             value="monthly"
             aria-label="30 Days"
-            onClick={() => {setTimespan("monthly")}}
+            onClick={() => {
+              setTimespan("monthly");
+            }}
           >
             30 Days
           </ToggleButton>
           <ToggleButton
             value="yearly"
             aria-label="12 Months"
-            onClick={() => {setTimespan("yearly")}}
+            onClick={() => {
+              setTimespan("yearly");
+            }}
           >
             12 Months
           </ToggleButton>

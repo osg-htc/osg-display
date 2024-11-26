@@ -40,7 +40,13 @@ const InnerSidebar = ({ fallbackData }: Props) => {
   }, [data]);
 
   return (
-    <Box className={style.container} width="300px" height="100%" bgcolor="white" mx="auto">
+    <Box
+      className={style.container}
+      width="300px"
+      height="100%"
+      bgcolor="white"
+      mx="auto"
+    >
       {isLoading ? (
         <></>
       ) : (
@@ -53,7 +59,7 @@ const InnerSidebar = ({ fallbackData }: Props) => {
           <Box>{tableElements}</Box>
           <Box className={style.rowLabel} mt="auto">
             <span style={{ display: "block" }}>
-              Last updated: {lastUpdated}
+              Last updated: <br /> {lastUpdated}
             </span>
           </Box>
         </Box>

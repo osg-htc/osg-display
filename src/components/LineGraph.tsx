@@ -76,7 +76,11 @@ const LineGraph = ({
     chartTitle
   );
 
-  return <Box height="90%"><Line {...options} ref={chartRef} /></Box>;
+  return (
+    <Box height="90%">
+      <Line {...options} ref={chartRef} />
+    </Box>
+  );
 };
 
 function formatDate(date: Date, timespan: Timespan): string {

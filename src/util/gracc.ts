@@ -1,7 +1,10 @@
 import { Root } from "./graccResponse";
 
 const endpoint = "https://gracc.opensciencegrid.org:443/q";
+
+// the raw index contains more detailed time data
 const rawIndex = "gracc.osg.raw";
+// the summary index contains more aggregated data and is faster to query
 const summaryIndex = "gracc.osg.summary";
 
 /**
@@ -107,7 +110,7 @@ async function graccQuery(
       EndTime: {
         date_histogram: {
           field: "EndTime",
-          fixed_interval: interval,
+          interval: interval,
           offset: offsetStr,
           extended_bounds: {
             min: startStr,
@@ -176,25 +179,25 @@ async function graccQuery(
 export async function generateReports(date?: Date): Promise<GeneratedReports> {
   // -1 is used for the end date to ensure the next hour isn't counted
   // +1 is used for the start date to ensure the previous hour isn't counted
-  
+
   date = date ?? new Date();
-  
+
   // 1 day ago
-  let offset = -Math.floor(date.getTime() % (1000 * 60 * 60)); // get the amount of milliseconds in the current hour  
-  let end = new Date(date.getTime() + offset - 1); // round to the nearest hour
-  let start = new Date(end.getTime() - 1000 * 60 * 60 * 24 + 1);
+  let offset = date.getTime() % (1000 * 60 * 60); // get the amount of milliseconds in the current hour
+  let end = new Date(date.getTime() - offset - 1); // round to the nearest hour
+  let start = new Date(end.getTime() - 1000 * 60 * 60 * 24 + 1); // subtract 1 day
   const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
   // 30 days ago
-  offset = -Math.floor(date.getTime() % (1000 * 60 * 60 * 24)); // get the amount of milliseconds in the current day
-  end = new Date(date.getTime() + offset - 1); // round to the nearest day
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1);
+  offset = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
+  end = new Date(date.getTime() - offset - 1); // round to the nearest day
+  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1); // subtract 30 days
   const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
 
   // 365 days ago
-  offset = -Math.floor(date.getTime() % (1000 * 60 * 60 * 24 * 30)); // get the amount of milliseconds in the current month
-  end = new Date(date.getTime() + offset - 1); // round to the nearest month
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 365 + 1);
+  offset = 0;
+  end = new Date(date.getTime() - offset - 1); // round to the nearest day
+  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 365 + 1); // subtract 365 days
   const yearly = await graccQuery(start, end, "30d", 0, summaryIndex);
 
   return {
@@ -210,7 +213,7 @@ let ssgReport: GeneratedReports | null = null;
 /**
  * Get the reports for CPU Hours and Job Count while building the site statically.
  * Saves the reports in memory to avoid regenerating them on every request
- * (which, realistically, would only be 3 pages).
+ * (which, realistically, would only be a few pages).
  *
  * @returns the generated reports
  */
