@@ -7,25 +7,25 @@ export function formatNumber(n: number): string {
 }
 
 export function formatDate(date: Date, timespan: Timespan): string {
-    switch (timespan) {
-      case "daily":
-        return date.toLocaleString("en-US", {
-          month: "numeric",
-          day: "numeric",
-          hour: "numeric",
-          minute: "numeric",
-        });
-      case "monthly":
-        return date.toLocaleString("en-US", {
-          month: "numeric",
-          day: "numeric",
-          year: "numeric",
-        });
-      case "yearly":
-        return date.toLocaleString("en-US", {
-          month: "numeric",
-          day: "numeric",
-          year: "numeric",
-        });
-    }
+  switch (timespan) {
+    case "daily":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+      });
+    case "monthly":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        year: "numeric",
+      });
+    case "yearly":
+      return date.toLocaleString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        year: "numeric",
+      });
   }
+}
