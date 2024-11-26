@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import useSWR from "swr";
 import style from "./InnerSidebar.module.css";
 import { Fragment, useEffect, useState } from "react";
+import { formatNumber } from "@/src/util/format";
 
 type SidebarData = {
   title: string;
@@ -107,12 +108,6 @@ function generateSidebarData(reports: GeneratedReports): SidebarData {
       sumCpuHours: formatNumber(reports.yearly.sumCpuHours),
     },
   ];
-}
-
-function formatNumber(n: number): string {
-  const roundedNumber = Math.round(n / 1000) * 1000;
-
-  return roundedNumber.toLocaleString("en-US");
 }
 
 export default InnerSidebar;

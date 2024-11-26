@@ -1,4 +1,7 @@
 import React from "react";
+import { Line } from "react-chartjs-2";
+import useSWR from "swr";
+import { formatDate } from "../util/format";
 import {
   AnalysisResult,
   GeneratedReports,
@@ -8,8 +11,6 @@ import {
 
 import { Box } from "@mui/material";
 import "chart.js/auto";
-import { Line } from "react-chartjs-2";
-import useSWR from "swr";
 
 type Props = {
   fallback: GeneratedReports;
@@ -83,30 +84,6 @@ const LineGraph = ({
   );
 };
 
-function formatDate(date: Date, timespan: Timespan): string {
-  switch (timespan) {
-    case "daily":
-      return date.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        hour: "numeric",
-        minute: "numeric",
-      });
-    case "monthly":
-      return date.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        year: "numeric",
-      });
-    case "yearly":
-      return date.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        year: "numeric",
-      });
-  }
-}
-
 function generateOptions(
   data: AnalysisResult,
   timespan: Timespan,
@@ -133,7 +110,7 @@ function generateOptions(
   if (includeCpuHours) {
     datasets.push({
       label: "CPU Hours",
-      data: data.dataPoints.map((point) => point.cpuHours),
+      data: data.dataPoints.map((point) => Math.floor(point.cpuHours)),
     });
   }
 
