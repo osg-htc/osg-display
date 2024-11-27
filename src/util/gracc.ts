@@ -217,7 +217,7 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   start = new Date(date);
   start.setFullYear(date.getFullYear() - 1);
   start.setDate(1);
-  const yearly = await graccQuery(start, end, "month", "24h", summaryIndex);
+  const yearly = await graccQuery(start, end, "month", 0, summaryIndex);
 
   const yearlySum = yearly.dataPoints.slice(-12-1, -1).reduce(
     (acc, point) => {
