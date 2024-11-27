@@ -1,5 +1,5 @@
+import { Box } from "@mui/material";
 import React from "react";
-import { Line } from "react-chartjs-2";
 import useSWR from "swr";
 import { formatDate } from "../util/format";
 import {
@@ -9,7 +9,7 @@ import {
   Timespan,
 } from "../util/gracc";
 
-import { Box } from "@mui/material";
+import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
 type Props = {
@@ -78,7 +78,7 @@ const LineGraph = ({
   );
 
   return (
-    <Box height="90%">
+    <Box width="100%" height="90%">
       <Line {...options} ref={chartRef} />
     </Box>
   );

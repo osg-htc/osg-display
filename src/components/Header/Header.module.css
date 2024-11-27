@@ -1,22 +1,47 @@
 .headerContent {
-  flex-direction: row;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.osgLogo {
+  justify-self: start;
+  order: 0;
+}
+
+.buttonGroup {
+  justify-self: center;
+  order: 1;
+}
+
+.nsfLogo {
+  justify-self: end;
+  order: 2;
 }
 
 /* mobile */
 @media only screen and (max-width: 768px) {
   .headerContent {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
   }
 
-  .nsfLogo {
-    display: none;
+  .osgLogo {
+    justify-self: center;
+    order: 0;
   }
+  
+  .nsfLogo {
+    justify-self: center;
+    order: 1;
+  }
+
+  .buttonGroup {
+    justify-self: center;
+    order: 2;
+    grid-column: span 2;
+  }
+  
 }
 
 /* tablet */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
-  .tagline {
-    display: none;
-  }
 }

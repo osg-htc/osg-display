@@ -26,7 +26,7 @@ const ChartContainer = ({
   const chartRef = useRef<any>(null);
 
   function handleSave() {
-    if (!chartRef.current) return;
+    if (!chartRef || !chartRef.current) return;
 
     const date = new Date().toISOString().split("T")[0];
 
@@ -41,62 +41,63 @@ const ChartContainer = ({
   return (
     <Box height="100%" bgcolor="white">
       <Box height="100%" p="15px" boxSizing="border-box">
-      <Box display="flex" justifyContent="space-between">
-        <ToggleButtonGroup
-          color="primary"
-          value={timespan}
-          aria-label="Timespan Options"
-        >
-          <ToggleButton
-            value="daily"
-            aria-label="24 Hours"
-            onClick={() => setTimespan("daily")}
+        <Box display="flex" justifyContent="space-between">
+          <ToggleButtonGroup
+            color="primary"
+            value={timespan}
+            aria-label="Timespan Options"
           >
-            24 Hours
-          </ToggleButton>
-          <ToggleButton
-            value="monthly"
-            aria-label="30 Days"
-            onClick={() => {
-              setTimespan("monthly");
-            }}
-          >
-            30 Days
-          </ToggleButton>
-          <ToggleButton
-            value="yearly"
-            aria-label="12 Months"
-            onClick={() => {
-              setTimespan("yearly");
-            }}
-          >
-            12 Months
-          </ToggleButton>
-        </ToggleButtonGroup>
-        <Box>
-          <Button variant="outlined" onClick={handleSave}>
-            Save
-          </Button>
+            <ToggleButton
+              value="daily"
+              aria-label="24 Hours"
+              onClick={() => setTimespan("daily")}
+            >
+              24 Hours
+            </ToggleButton>
+            <ToggleButton
+              value="monthly"
+              aria-label="30 Days"
+              onClick={() => {
+                setTimespan("monthly");
+              }}
+            >
+              30 Days
+            </ToggleButton>
+            <ToggleButton
+              value="yearly"
+              aria-label="12 Months"
+              onClick={() => {
+                setTimespan("yearly");
+              }}
+            >
+              12 Months
+            </ToggleButton>
+          </ToggleButtonGroup>
+          <Box>
+            <Button variant="outlined" onClick={handleSave}>
+              Save
+            </Button>
+          </Box>
         </Box>
-      </Box>
 
-      <LineGraph
-        fallback={fallback}
-        includeJobs={includeJobs}
-        includeCpuHours={includeCpuHours}
-        chartTitle={
-          description +
-          " / " +
-          (timespan === "daily"
-            ? "Hour"
-            : timespan === "monthly"
-            ? "Day"
-            : "Month")
-        }
-        timespan={timespan}
-        chartRef={chartRef}
-      />
-    </Box></Box>
+        <LineGraph
+          fallback={fallback}
+          includeJobs={includeJobs}
+          includeCpuHours={includeCpuHours}
+          chartTitle={
+            description +
+            " / " +
+            (timespan === "daily"
+              ? "Hour"
+              : timespan === "monthly"
+              ? "Day"
+              : "Month")
+          }
+          timespan={timespan}
+          chartRef={chartRef}
+        />
+      </Box>
+    </Box>
   );
 };
 

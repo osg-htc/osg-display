@@ -12,7 +12,6 @@ const Header = () => {
     >
       <Box
         display="grid"
-        gridTemplateColumns="1fr 1fr 1fr"
         justifyItems="center"
         alignItems="center"
         paddingY="5px"
@@ -24,12 +23,12 @@ const Header = () => {
           width={315 * 0.6}
           height={70 * 0.6}
           alt="OSG Logo"
-          style={{ justifySelf: "start" }}
+          className={style.osgLogo}
         />
         <ButtonGroup
           variant="outlined"
           aria-label="Information Sources"
-          style={{ justifySelf: "center" }}
+          className={style.buttonGroup}
         >
           <Button
             LinkComponent={Link}
@@ -51,7 +50,6 @@ const Header = () => {
           height={140 * 0.4}
           alt="NSF Logo"
           className={style.nsfLogo}
-          style={{ justifySelf: "end", margin: "-20px", marginRight: "10px" }}
         />
       </Box>
     </Box>
