@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <Header />
         <Box display="flex" height="85%" className={style.contentContainer} boxSizing="border-box">
-          <Box m="10px 10px 0px 10px" width="100%" flexGrow="1" className={style.childContainer}>
+          <Box width="100%" flexGrow="1" className={style.childContainer}>
             {children}
           </Box>
           <Box mt="10px" flexGrow="1">
