@@ -144,7 +144,7 @@ function generateOptions(
       },
       plugins: {
         legend: {
-          position: "top",
+          display: false,
         },
         tooltip: {
           mode: "index",
