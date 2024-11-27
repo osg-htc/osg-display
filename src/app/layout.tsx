@@ -19,11 +19,16 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Header />
-        <Box display="flex" height="85%" className={style.contentContainer} boxSizing="border-box">
-          <Box width="100%" flexGrow="1" className={style.childContainer}>
+        <Box
+          display="flex"
+          height="85%"
+          className={style.contentContainer}
+          boxSizing="border-box"
+        >
+          <Box width="100%" className={style.childContainer}>
             {children}
           </Box>
-          <Box mt="10px" flexGrow="1">
+          <Box mt="10px">
             <Sidebar />
           </Box>
         </Box>

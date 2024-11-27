@@ -94,18 +94,18 @@ function generateSidebarData(reports: GeneratedReports): SidebarData {
   return [
     {
       title: "In the last 24 Hours",
-      sumJobs: formatNumber(reports.daily.sumJobs),
-      sumCpuHours: formatNumber(reports.daily.sumCpuHours),
+      sumJobs: formatNumber(reports.dailySum.sumJobs),
+      sumCpuHours: formatNumber(reports.dailySum.sumCpuHours),
     },
     {
       title: "In the last 30 Days",
-      sumJobs: formatNumber(reports.monthly.sumJobs),
-      sumCpuHours: formatNumber(reports.monthly.sumCpuHours),
+      sumJobs: formatNumber(reports.monthlySum.sumJobs),
+      sumCpuHours: formatNumber(reports.monthlySum.sumCpuHours),
     },
     {
       title: "In the last 12 Months",
-      sumJobs: formatNumber(reports.yearly.sumJobs),
-      sumCpuHours: formatNumber(reports.yearly.sumCpuHours),
+      sumJobs: formatNumber(reports.yearlySum.sumJobs),
+      sumCpuHours: formatNumber(reports.yearlySum.sumCpuHours),
     },
   ];
 }
