@@ -108,46 +108,48 @@ function generateOptions(
   );
   const datasets = [];
 
-  const lastPoint = data.dataPoints[data.dataPoints.length - 1];
-  const lineDataPoints = data.dataPoints.slice(0, -1); // remove the last point
+  if (data.dataPoints.length !== 0) {
+    const lastPoint = data.dataPoints[data.dataPoints.length - 1];
+    const lineDataPoints = data.dataPoints.slice(0, -1); // remove the last point
 
-  if (includeJobs) {
-    datasets.push({
-      type: "line",
-      label: "Jobs",
-      data: lineDataPoints.map((point) => point.nJobs),
-    });
+    if (includeJobs) {
+      datasets.push({
+        type: "line",
+        label: "Jobs",
+        data: lineDataPoints.map((point) => point.nJobs),
+      });
 
-    datasets.push({
-      type: "scatter",
-      label: "Jobs",
-      pointBackgroundColor: "red",
-      data: [
-        {
-          x: formatDate(new Date(lastPoint.timestamp), timespan),
-          y: lastPoint.nJobs,
-        },
-      ],
-    });
-  }
+      datasets.push({
+        type: "scatter",
+        label: "Jobs",
+        pointBackgroundColor: "red",
+        data: [
+          {
+            x: formatDate(new Date(lastPoint.timestamp), timespan),
+            y: lastPoint.nJobs,
+          },
+        ],
+      });
+    }
 
-  if (includeCpuHours) {
-    datasets.push({
-      label: "CPU Hours",
-      data: lineDataPoints.map((point) => point.cpuHours),
-    });
+    if (includeCpuHours) {
+      datasets.push({
+        label: "CPU Hours",
+        data: lineDataPoints.map((point) => point.cpuHours),
+      });
 
-    datasets.push({
-      type: "scatter",
-      label: "CPU Hours",
-      pointBackgroundColor: "red",
-      data: [
-        {
-          x: formatDate(new Date(lastPoint.timestamp), timespan),
-          y: lastPoint.cpuHours,
-        },
-      ],
-    });
+      datasets.push({
+        type: "scatter",
+        label: "CPU Hours",
+        pointBackgroundColor: "red",
+        data: [
+          {
+            x: formatDate(new Date(lastPoint.timestamp), timespan),
+            y: lastPoint.cpuHours,
+          },
+        ],
+      });
+    }
   }
 
   const yLabel =
@@ -161,7 +163,7 @@ function generateOptions(
     type: "line",
     data: {
       labels,
-      datasets: (datasets as any), // this is VERY bad practice, however the React Charts.js typings are not as specific as they should be
+      datasets: datasets as any, // this is VERY bad practice, however the React Charts.js typings are not as specific as they should be
     },
     options: {
       // normalized: true,

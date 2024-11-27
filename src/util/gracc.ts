@@ -8,7 +8,7 @@ const rawIndex = "gracc.osg.raw";
 const summaryIndex = "gracc.osg.summary";
 
 /**
- * The timespan for the histogram.
+ * The *entire* timespan for the histogram.
  */
 export type Timespan = "daily" | "monthly" | "yearly";
 
@@ -28,9 +28,12 @@ export type AnalysisResult = {
   took: number;
   startTime: string;
   endTime: string;
+  dataPoints: HistogramDataPont[];
+};
+
+export type SumResult = {
   sumJobs: number;
   sumCpuHours: number;
-  dataPoints: HistogramDataPont[];
 };
 
 /**
@@ -39,8 +42,11 @@ export type AnalysisResult = {
 export type GeneratedReports = {
   generatedAt: string;
   daily: AnalysisResult;
+  dailySum: SumResult;
   monthly: AnalysisResult;
+  monthlySum: SumResult;
   yearly: AnalysisResult;
+  yearlySum: SumResult;
 };
 
 /**
@@ -112,6 +118,10 @@ async function graccQuery(
           field: "EndTime",
           interval: interval,
           offset: offsetStr,
+          extended_bounds: {
+            min: startStr,
+            max: endStr,
+          },
         },
         aggs: {
           CoreHours: {
@@ -152,11 +162,6 @@ async function graccQuery(
     took: body.took,
     startTime: startStr,
     endTime: endStr,
-    sumJobs: buckets.reduce((acc, bucket) => acc + bucket.Njobs.value, 0),
-    sumCpuHours: buckets.reduce(
-      (acc, bucket) => acc + bucket.CoreHours.value || bucket.doc_count,
-      0
-    ),
     dataPoints: buckets.map((bucket) => ({
       timestamp: bucket.key_as_string,
       nJobs: bucket.Njobs.value,
@@ -185,12 +190,28 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   let start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24); // subtract 1 day
   const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
+  const dailySum = daily.dataPoints.slice(-24-1, -1).reduce(
+    (acc, point) => {
+      acc.sumJobs += point.nJobs;
+      acc.sumCpuHours += point.cpuHours;
+      return acc;
+    },
+    { sumJobs: 0, sumCpuHours: 0 }
+  );
 
   // 30 days ago
   ms = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
   start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24 * 30); // subtract 30 days
-  const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
+  const monthly = await graccQuery(start, end, "24h", 0, summaryIndex);
 
+  const monthlySum = monthly.dataPoints.slice(-30-1, -1).reduce(
+    (acc, point) => {
+      acc.sumJobs += point.nJobs;
+      acc.sumCpuHours += point.cpuHours;
+      return acc;
+    },
+    { sumJobs: 0, sumCpuHours: 0 }
+  );
 
   // 1 year ago
   start = new Date(date);
@@ -198,12 +219,23 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   start.setDate(1);
   const yearly = await graccQuery(start, end, "month", "24h", summaryIndex);
 
+  const yearlySum = yearly.dataPoints.slice(-12-1, -1).reduce(
+    (acc, point) => {
+      acc.sumJobs += point.nJobs;
+      acc.sumCpuHours += point.cpuHours;
+      return acc;
+    },
+    { sumJobs: 0, sumCpuHours: 0 }
+  );
 
   return {
     generatedAt: date.toISOString(),
     daily,
+    dailySum,
     monthly,
+    monthlySum,
     yearly,
+    yearlySum,
   };
 }
 
@@ -217,10 +249,22 @@ let ssgReport: GeneratedReports | null = null;
  * @returns the generated reports
  */
 export async function getSSGReports(): Promise<GeneratedReports> {
-  if (ssgReport) {
-    return ssgReport;
+  if (!ssgReport) {
+    ssgReport = await generateReports();
   }
 
-  ssgReport = await generateReports();
+  // sanity check that sums are at least 0
+  if (
+    (ssgReport.dailySum.sumCpuHours &&
+      ssgReport.monthlySum.sumCpuHours &&
+      ssgReport.yearlySum.sumCpuHours &&
+      ssgReport.dailySum.sumJobs &&
+      ssgReport.monthlySum.sumJobs &&
+      ssgReport.yearlySum.sumJobs) === 0
+  ) {
+    console.error(ssgReport.dailySum);
+    throw new Error("Generated reports are empty");
+  }
+
   return ssgReport;
 }
