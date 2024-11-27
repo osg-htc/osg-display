@@ -84,6 +84,15 @@ const LineGraph = ({
   );
 };
 
+/**
+ * Generates the options for the Chart.js Line graph.
+ * @param data analysis result data
+ * @param timespan the timespan for the histogram
+ * @param includeJobs whether to include the jobs data
+ * @param includeCpuHours whether to include the CPU hours data
+ * @param chartTitle the title of the chart
+ * @returns the options for the Line graph, to be passed to the Line React component
+ */
 function generateOptions(
   data: AnalysisResult,
   timespan: Timespan,
@@ -176,6 +185,9 @@ function generateOptions(
   };
 }
 
+/**
+ * A Chart.js plugin to set the background color of the canvas.
+ */
 const chartBackgroundColorPlugin = {
   id: "customCanvasBackgroundColor",
   beforeDraw: (chart: any, _: any, options: any) => {

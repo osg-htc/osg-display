@@ -79,8 +79,6 @@ const ChartContainer = ({
         </Box>
       </Box>
 
-      {/* <Box height="100%">wow</Box> */}
-
       <LineGraph
         fallback={fallback}
         includeJobs={includeJobs}
