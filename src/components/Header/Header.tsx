@@ -46,9 +46,9 @@ const Header = () => {
           </Button>
         </ButtonGroup>
         <Image
-          src="nsf2.png"
-          width={12104 * 0.02}
-          height={3900 * 0.02}
+          src="nsf.png"
+          width={584 * 0.4}
+          height={140 * 0.4}
           alt="NSF Logo"
           className={style.nsfLogo}
           style={{ justifySelf: "end", margin: "-20px", marginRight: "10px" }}
