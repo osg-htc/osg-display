@@ -1,0 +1,47 @@
+.container {
+  width: 300px;
+}
+
+.rowLabel {
+  background-color: var(--lightgray);
+  font-weight: bold;
+  padding: 5px 15px;
+}
+
+.rowContainer {
+  padding: 5px 20px;
+  border-top: 1px solid var(--lightgray);
+}
+
+.rowNumber {
+  display: inline-block;
+  width: 50%;
+  font-weight: bold;
+  text-align: right;
+}
+
+/* mobile */
+@media only screen and (max-width: 768px) {
+  .contentContainer {
+    flex-direction: column;
+  }
+
+  .container {
+    margin-top: 25px;
+    /* width: 80%; */
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    width: 250px;
+  }
+}
+
+.footer {
+  border-top: 5px solid var(--accent);
+  background-color: var(--darkgray);
+  color: var(--foreground);
+  width: 100%;
+}

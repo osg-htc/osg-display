@@ -1,0 +1,27 @@
+.tagline {
+  margin-top: auto;
+  margin-bottom: auto;
+  color: #333333;
+}
+
+.headerContent {
+  flex-direction: row;
+}
+
+/* mobile */
+@media only screen and (max-width: 768px) {
+  .tagline {
+    display: none;
+  }
+
+  .headerContent {
+    flex-direction: column;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .tagline {
+    display: none;
+  }
+}
