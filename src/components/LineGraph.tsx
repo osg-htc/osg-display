@@ -9,7 +9,7 @@ import {
   Timespan,
 } from "../util/gracc";
 
-import { Line } from "react-chartjs-2";
+import { Chart } from "react-chartjs-2";
 import "chart.js/auto";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
   includeCpuHours: boolean;
   chartTitle: string;
   timespan: Timespan;
-  chartRef: React.ComponentProps<typeof Line>["ref"];
+  chartRef: React.ComponentProps<typeof Chart>["ref"];
 };
 
 const LineGraph = ({
@@ -78,8 +78,8 @@ const LineGraph = ({
   );
 
   return (
-    <Box width="100%" height="90%">
-      <Line {...options} ref={chartRef} />
+    <Box height="90%">
+      <Chart {...options} ref={chartRef} />
     </Box>
   );
 };
@@ -99,27 +99,54 @@ function generateOptions(
   includeJobs: boolean,
   includeCpuHours: boolean,
   chartTitle: string
-): React.ComponentProps<typeof Line> {
+): React.ComponentProps<typeof Chart> {
   const fontSize = 18;
   const titleSize = 24;
 
   const labels = data.dataPoints.map((point) =>
     formatDate(new Date(point.timestamp), timespan)
   );
-
   const datasets = [];
+
+  const lastPoint = data.dataPoints[data.dataPoints.length - 1];
+  const lineDataPoints = data.dataPoints.slice(0, -1); // remove the last point
 
   if (includeJobs) {
     datasets.push({
+      type: "line",
       label: "Jobs",
-      data: data.dataPoints.map((point) => point.nJobs),
+      data: lineDataPoints.map((point) => point.nJobs),
+    });
+
+    datasets.push({
+      type: "scatter",
+      label: "Jobs",
+      pointBackgroundColor: "red",
+      data: [
+        {
+          x: formatDate(new Date(lastPoint.timestamp), timespan),
+          y: lastPoint.nJobs,
+        },
+      ],
     });
   }
 
   if (includeCpuHours) {
     datasets.push({
       label: "CPU Hours",
-      data: data.dataPoints.map((point) => Math.floor(point.cpuHours)),
+      data: lineDataPoints.map((point) => point.cpuHours),
+    });
+
+    datasets.push({
+      type: "scatter",
+      label: "CPU Hours",
+      pointBackgroundColor: "red",
+      data: [
+        {
+          x: formatDate(new Date(lastPoint.timestamp), timespan),
+          y: lastPoint.cpuHours,
+        },
+      ],
     });
   }
 
@@ -131,12 +158,13 @@ function generateOptions(
       : "CPU Hours";
 
   return {
+    type: "line",
     data: {
       labels,
-      datasets,
+      datasets: (datasets as any), // this is VERY bad practice, however the React Charts.js typings are not as specific as they should be
     },
     options: {
-      normalized: true,
+      // normalized: true,
       responsive: true,
       maintainAspectRatio: false,
       animation: {
