@@ -1,21 +1,16 @@
-.tagline {
-  margin-top: auto;
-  margin-bottom: auto;
-  color: #333333;
-}
-
 .headerContent {
   flex-direction: row;
 }
 
 /* mobile */
 @media only screen and (max-width: 768px) {
-  .tagline {
-    display: none;
+  .headerContent {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
   }
 
-  .headerContent {
-    flex-direction: column;
+  .nsfLogo {
+    display: none;
   }
 }
 

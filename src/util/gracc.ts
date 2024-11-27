@@ -191,12 +191,12 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
 
   // 1 year ago
+  offset = 1000 * 60 * 60 * 24; // offset 1 day so the histogram key places nicely
+  end = new Date(date);
   start = new Date(date);
   start.setFullYear(date.getFullYear() - 1);
   start.setDate(1);
-  end = new Date(date);
-  console.log(start.toISOString());
-  const yearly = await graccQuery(start, end, "month", 1000 * 60 * 60 * 24, summaryIndex);
+  const yearly = await graccQuery(start, end, "month", offset, summaryIndex);
 
   return {
     generatedAt: date.toISOString(),

@@ -11,8 +11,9 @@ const Header = () => {
       sx={{ borderBottom: "5px solid #ffa500" }}
     >
       <Box
-        display="flex"
-        justifyContent="space-around"
+        display="grid"
+        gridTemplateColumns="1fr 1fr 1fr"
+        justifyItems="center"
         alignItems="center"
         paddingY="5px"
         paddingX="15px"
@@ -23,8 +24,13 @@ const Header = () => {
           width={315 * 0.6}
           height={70 * 0.6}
           alt="OSG Logo"
+          style={{ justifySelf: "start" }}
         />
-        <ButtonGroup variant="outlined" aria-label="Information Sources">
+        <ButtonGroup
+          variant="outlined"
+          aria-label="Information Sources"
+          style={{ justifySelf: "center" }}
+        >
           <Button
             LinkComponent={Link}
             href="status-map"
@@ -39,10 +45,14 @@ const Header = () => {
             CPU Hours
           </Button>
         </ButtonGroup>
-        <span className={style.tagline}>
-          A national, distributed computing partnership for data-intensive
-          research
-        </span>
+        <Image
+          src="nsf2.png"
+          width={12104 * 0.02}
+          height={3900 * 0.02}
+          alt="NSF Logo"
+          className={style.nsfLogo}
+          style={{ justifySelf: "end", margin: "-20px", marginRight: "10px" }}
+        />
       </Box>
     </Box>
   );
