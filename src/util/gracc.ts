@@ -219,6 +219,13 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   start.setDate(1);
   const yearly = await graccQuery(start, end, "month", 0, summaryIndex);
 
+  yearly.dataPoints = yearly.dataPoints.map((point) => {
+    // add a couple days so the date is for sure in the correct month
+    let timestamp = new Date(point.timestamp);
+    timestamp = new Date(timestamp.getTime() + 1000 * 60 * 60 * 24 * 2);
+    return { ...point, timestamp: timestamp.toISOString() };
+  });
+
   const yearlySum = yearly.dataPoints.slice(-12-1, -1).reduce(
     (acc, point) => {
       acc.sumJobs += point.nJobs;
