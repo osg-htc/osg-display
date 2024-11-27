@@ -2,6 +2,10 @@
   flex-direction: row;
 }
 
+.childContainer {
+  margin: 10px 10px 0px 10px;
+}
+
 /* mobile */
 @media only screen and (max-width: 768px) {
   .contentContainer {
@@ -9,7 +13,7 @@
   }
 
   .childContainer {
-    margin: 0px;
+    margin: 10px 0px 0px 0px;
   }
 }
 

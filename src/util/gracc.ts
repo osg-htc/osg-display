@@ -60,12 +60,12 @@ async function graccQuery(
   start: Date,
   end: Date,
   interval: string,
-  offset: number,
+  offset: number | string,
   index: string
 ): Promise<AnalysisResult> {
   const startStr = start.toISOString();
   const endStr = end.toISOString();
-  const offsetStr = `${offset}ms`;
+  const offsetStr = typeof offset === "number" ? `${offset}ms` : offset;
 
   // perform query
 
@@ -173,30 +173,31 @@ async function graccQuery(
  * @returns the generated reports
  */
 export async function generateReports(date?: Date): Promise<GeneratedReports> {
-  // -1 is used for the end date to ensure the next hour isn't counted
-  // +1 is used for the start date to ensure the previous hour isn't counted
-
   date = date ?? new Date();
 
+  // only the start needs to be correctly aligned since we're also reporting
+  // the current interval in a scatter plot
+
+  const end = new Date(date);
+
   // 1 day ago
-  let offset = date.getTime() % (1000 * 60 * 60); // get the amount of milliseconds in the current hour
-  let end = new Date(date.getTime() - offset - 1); // round to the nearest hour
-  let start = new Date(end.getTime() - 1000 * 60 * 60 * 24 + 1); // subtract 1 day
+  let ms = date.getTime() % (1000 * 60 * 60); // get the amount of milliseconds in the current hour
+  let start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24); // subtract 1 day
   const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
+
   // 30 days ago
-  offset = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
-  end = new Date(date.getTime() - offset - 1); // round to the nearest day
-  start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1); // subtract 30 days
+  ms = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
+  start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24 * 30); // subtract 30 days
   const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
+
 
   // 1 year ago
   start = new Date(date);
   start.setFullYear(date.getFullYear() - 1);
   start.setDate(1);
-  end = new Date(date);
-  console.log(start.toISOString());
-  const yearly = await graccQuery(start, end, "month", 1000 * 60 * 60 * 24, summaryIndex);
+  const yearly = await graccQuery(start, end, "month", "24h", summaryIndex);
+
 
   return {
     generatedAt: date.toISOString(),
