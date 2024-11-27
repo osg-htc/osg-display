@@ -60,12 +60,12 @@ async function graccQuery(
   start: Date,
   end: Date,
   interval: string,
-  offset: number,
+  offset: number | string,
   index: string
 ): Promise<AnalysisResult> {
   const startStr = start.toISOString();
   const endStr = end.toISOString();
-  const offsetStr = `${offset}ms`;
+  const offsetStr = typeof offset === "number" ? `${offset}ms` : offset;
 
   // perform query
 
@@ -173,30 +173,49 @@ async function graccQuery(
  * @returns the generated reports
  */
 export async function generateReports(date?: Date): Promise<GeneratedReports> {
+  date = date ?? new Date();
+  
   // -1 is used for the end date to ensure the next hour isn't counted
   // +1 is used for the start date to ensure the previous hour isn't counted
 
-  date = date ?? new Date();
+  // because buckets use the left-hand side of the interval, we need to add an
+  // extra interval to each data point to make it right-hand side
+
+  // (this isn't optimal and ES probably has better ways to do this,
+  //  but there aren't many buckets anyways, so it's not degrading performance)
 
   // 1 day ago
-  let offset = date.getTime() % (1000 * 60 * 60); // get the amount of milliseconds in the current hour
-  let end = new Date(date.getTime() - offset - 1); // round to the nearest hour
+  let ms = date.getTime() % (1000 * 60 * 60); // get the amount of milliseconds in the current hour
+  let end = new Date(date.getTime() - ms - 1); // round to the nearest hour
   let start = new Date(end.getTime() - 1000 * 60 * 60 * 24 + 1); // subtract 1 day
   const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
+  // add 1 hour to all points
+  daily.dataPoints.forEach((point, i) => {
+    const date = new Date(new Date(point.timestamp).getTime() + 1000 * 60 * 60);
+    daily.dataPoints[i].timestamp = date.toISOString();
+  })
+
   // 30 days ago
-  offset = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
-  end = new Date(date.getTime() - offset - 1); // round to the nearest day
+  ms = date.getTime() % (1000 * 60 * 60 * 24); // get the amount of milliseconds in the current day
+  end = new Date(date.getTime() - ms - 1); // round to the nearest day
   start = new Date(end.getTime() - 1000 * 60 * 60 * 24 * 30 + 1); // subtract 30 days
   const monthly = await graccQuery(start, end, "1d", 0, summaryIndex);
 
+  // add 1 day to all points
+  monthly.dataPoints.forEach((point, i) => {
+    const date = new Date(new Date(point.timestamp).getTime() + 1000 * 60 * 60 * 24);
+    monthly.dataPoints[i].timestamp = date.toISOString();
+  })
+
   // 1 year ago
-  offset = 1000 * 60 * 60 * 24; // offset 1 day so the histogram key places nicely
   end = new Date(date);
   start = new Date(date);
   start.setFullYear(date.getFullYear() - 1);
   start.setDate(1);
-  const yearly = await graccQuery(start, end, "month", offset, summaryIndex);
+  const yearly = await graccQuery(start, end, "month", "24h", summaryIndex);
+
+  // no need to add anything because this data is calendar-based
 
   return {
     generatedAt: date.toISOString(),
