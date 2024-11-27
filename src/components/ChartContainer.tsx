@@ -39,7 +39,8 @@ const ChartContainer = ({
   }
 
   return (
-    <Box height="100%" p="10px" bgcolor="white">
+    <Box height="100%" bgcolor="white">
+      <Box height="100%" p="15px" boxSizing="border-box">
       <Box display="flex" justifyContent="space-between">
         <ToggleButtonGroup
           color="primary"
@@ -95,7 +96,7 @@ const ChartContainer = ({
         timespan={timespan}
         chartRef={chartRef}
       />
-    </Box>
+    </Box></Box>
   );
 };
 
