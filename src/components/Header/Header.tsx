@@ -44,13 +44,19 @@ const Header = () => {
             CPU Hours
           </Button>
         </ButtonGroup>
-        <Image
-          src="nsf.png"
-          width={584 * 0.4}
-          height={140 * 0.4}
-          alt="NSF Logo"
-          className={style.nsfLogo}
-        />
+        <Box display="flex" className={style.nsf}>
+          <span className={style.tagline} style={{alignSelf: "center"}}>
+            A national, distributed computing partnership for data-intensive
+            research
+          </span>
+          <Image
+            src="nsf.png"
+            width={140 * 0.5}
+            height={140 * 0.5}
+            alt="NSF Logo"
+            style={{margin: "-10px", marginLeft: "10px"}}
+          />
+        </Box>
       </Box>
     </Box>
   );
