@@ -192,7 +192,7 @@ function generateOptions(
                 return `${datasetLabel}: ${dataPoint}`;
               } else if (typeof dataPoint === "number") {
                 // y value of the line graph
-                return `${datasetLabel}: ${dataPoint.toLocaleString("en-US")}`;
+                return `${datasetLabel}: ${Math.floor(dataPoint).toLocaleString("en-US")}`;
               } else {
                 // point of the scatter plot
                 return `${datasetLabel}: ${dataPoint.y.toLocaleString(
