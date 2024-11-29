@@ -26,6 +26,6 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhoast:3000/osgdisplay](http://localhost:3000/osg-display) with your browser to see the result.
+Open [http://localhoast:3000/osg-display](http://localhost:3000/osg-display) with your browser to see the result.
 
-Depending on your deployment environment, you may need to change the `next.config.ts`'s `assetPath` and `basePath`. These are set by default to `/osg-display` to accomodate for my Github Pages.
+Depending on your deployment environment, you may need to change the `next.config.ts`'s `assetPath` and `basePath`.
