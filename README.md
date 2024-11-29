@@ -1,8 +1,20 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OSG Display
 
-## Getting Started
+OSG Display is a static website which is used to view analytical information about jobs ran on [OSPool](https://osg-htc.org/). The main deployment is at [display.osg-htc.org](https://display.osg-htc.org).
 
-First, run the development server:
+## Project Structure
+
+The site is built every day in order to provide fallback data, in case GRACC is down and live statistics can't be used for the client.
+
+The main file where [GRACC](https://gracc.opensciencegrid.org/) (the OSG Elasticsearch instance) is queried is at `src/util/gracc.ts`.
+
+The files `src/components/ChartContainer.tsx` and `src/components/Sidebar/Sidebar.tsx`, which are server-side components, query this data on build, and pass them onto child client-side components.
+
+If the connection to GRACC is successful, the client-side components will re-query the data on mount as well as every 3 minutes using [SWR](https://swr.vercel.app/).
+
+## Local Server
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,23 +26,6 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhoast:3000/osgdisplay](http://localhost:3000/osg-display) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Depending on your deployment environment, you may need to change the `next.config.ts`'s `assetPath` and `basePath`. These are set by default to `/osg-display` to accomodate for my Github Pages.

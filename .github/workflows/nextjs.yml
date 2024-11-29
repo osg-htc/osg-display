@@ -9,8 +9,9 @@ on:
   pull_request:
     branches: ["main"]
 
-  # Runs whenever the default pages branch is pushed to
-  page_build:
+  # Runs whenever the main branch is pushed to
+  push:
+    branches: ["main"]
 
   # Runs on a schedule every day at 6:00 UTC (12:00 AM CST)
   schedule:
