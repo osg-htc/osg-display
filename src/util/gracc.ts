@@ -190,7 +190,7 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   let start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24); // subtract 1 day
   const daily = await graccQuery(start, end, "1h", 0, rawIndex);
 
-  const dailySum = daily.dataPoints.slice(-24-1, -1).reduce(
+  const dailySum = daily.dataPoints.slice(-24 - 1, -1).reduce(
     (acc, point) => {
       acc.sumJobs += point.nJobs;
       acc.sumCpuHours += point.cpuHours;
@@ -204,7 +204,7 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
   start = new Date(date.getTime() - ms - 1000 * 60 * 60 * 24 * 30); // subtract 30 days
   const monthly = await graccQuery(start, end, "24h", 0, summaryIndex);
 
-  const monthlySum = monthly.dataPoints.slice(-30-1, -1).reduce(
+  const monthlySum = monthly.dataPoints.slice(-30 - 1, -1).reduce(
     (acc, point) => {
       acc.sumJobs += point.nJobs;
       acc.sumCpuHours += point.cpuHours;
@@ -226,7 +226,7 @@ export async function generateReports(date?: Date): Promise<GeneratedReports> {
     return { ...point, timestamp: timestamp.toISOString() };
   });
 
-  const yearlySum = yearly.dataPoints.slice(-12-1, -1).reduce(
+  const yearlySum = yearly.dataPoints.slice(-12 - 1, -1).reduce(
     (acc, point) => {
       acc.sumJobs += point.nJobs;
       acc.sumCpuHours += point.cpuHours;
