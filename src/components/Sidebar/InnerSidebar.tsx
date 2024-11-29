@@ -18,24 +18,21 @@ type Props = {
 };
 
 const InnerSidebar = ({ fallbackData }: Props) => {
-  const { data, isLoading } = useSWR(
-    "generateReports",
-    async () => await generateReports(),
-    {
-      fallbackData,
-      refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-    }
-  );
+  const { data, isLoading } = useSWR("generateReports", async () => generateReports(), {
+    fallbackData,
+    refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateOnMount: true,
+  });
 
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [tableElements, setTableElements] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
+    // this will work even if fallback data is used
     if (data) {
-      setLastUpdated(new Date(data.generatedAt).toLocaleString());
+      setLastUpdated(new Date(data.generatedAt).toLocaleString("en-US"));
       setTableElements(generateTableElements(generateSidebarData(data)));
     }
   }, [data]);
