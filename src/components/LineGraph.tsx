@@ -192,12 +192,30 @@ function generateOptions(
                 return `${datasetLabel}: ${dataPoint}`;
               } else if (typeof dataPoint === "number") {
                 // y value of the line graph
-                return `${datasetLabel}: ${Math.floor(dataPoint).toLocaleString("en-US")}`;
+                return `${datasetLabel}: ${Math.floor(dataPoint).toLocaleString(
+                  "en-US"
+                )}`;
               } else {
                 // point of the scatter plot
                 return `${datasetLabel}: ${dataPoint.y.toLocaleString(
                   "en-US"
                 )}`;
+              }
+            },
+            title(tooltipItems): string | void {
+              if (tooltipItems.length === 0) return "";
+
+              const item = tooltipItems[0];
+              if (
+                item.raw &&
+                typeof item.raw === "object" &&
+                "x" in item.raw &&
+                typeof item.raw.x === "string"
+              ) {
+                return item.raw.x;
+              } else {
+                // returning void will use the default method
+                return;
               }
             },
           },

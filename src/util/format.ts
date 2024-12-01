@@ -22,7 +22,7 @@ export function formatDate(date: Date, timespan: Timespan): string {
     case "daily":
       return date.toLocaleString("en-US", {
         month: "numeric", // UTC not used because we need accurate time
-        day: "numeric",
+        day: "2-digit",
         hour: "numeric",
         minute: "numeric",
       });
@@ -30,7 +30,7 @@ export function formatDate(date: Date, timespan: Timespan): string {
       return date.toLocaleString("en-US", {
         timeZone: "UTC", // UTC used because the ES buckets use UTC (and sometimes cause the day to be 1 off)
         month: "numeric",
-        day: "numeric",
+        day: "2-digit",
         year: "numeric",
       });
     case "yearly":
