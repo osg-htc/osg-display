@@ -12,6 +12,9 @@ import {
 import { Chart } from "react-chartjs-2";
 import "chart.js/auto";
 
+const FONT_SIZE = 18;
+const TITLE_FONT_SIZE = 24;
+
 type Props = {
   fallback: GeneratedReports;
   includeJobs: boolean;
@@ -31,7 +34,7 @@ const LineGraph = ({
 }: Props) => {
   const { data, isLoading } = useSWR(
     "generateReports",
-    async () => await generateReports(),
+    async () => generateReports(),
     {
       fallbackData: fallback,
       refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
@@ -100,9 +103,6 @@ function generateOptions(
   includeCpuHours: boolean,
   chartTitle: string
 ): React.ComponentProps<typeof Chart> {
-  const fontSize = 18;
-  const titleSize = 24;
-
   const labels = data.dataPoints.map((point) =>
     formatDate(new Date(point.timestamp), timespan)
   );
@@ -177,14 +177,54 @@ function generateOptions(
           display: false,
         },
         tooltip: {
-          mode: "index",
+          mode: "nearest",
           intersect: false,
+          callbacks: {
+            label(tooltipItem) {
+              const datasetLabel = tooltipItem.dataset.label || "";
+              const dataPoint = tooltipItem.raw as
+                | string
+                | number
+                | { x: string; y: number };
+
+              if (typeof dataPoint === "string") {
+                // shouldn't be possible but easy case
+                return `${datasetLabel}: ${dataPoint}`;
+              } else if (typeof dataPoint === "number") {
+                // y value of the line graph
+                return `${datasetLabel}: ${Math.floor(dataPoint).toLocaleString(
+                  "en-US"
+                )}`;
+              } else {
+                // point of the scatter plot
+                return `${datasetLabel}: ${dataPoint.y.toLocaleString(
+                  "en-US"
+                )}`;
+              }
+            },
+            title(tooltipItems): string | void {
+              if (tooltipItems.length === 0) return "";
+
+              const item = tooltipItems[0];
+              if (
+                item.raw &&
+                typeof item.raw === "object" &&
+                "x" in item.raw &&
+                typeof item.raw.x === "string"
+              ) {
+                return item.raw.x;
+              } else {
+                // returning void will use the default method
+                return;
+              }
+            },
+          },
         },
         title: {
           display: true,
           text: chartTitle,
           align: "start",
-          font: { size: titleSize },
+          font: { size: TITLE_FONT_SIZE },
         },
       },
       scales: {
@@ -192,7 +232,7 @@ function generateOptions(
           title: {
             display: true,
             text: "Timestamp",
-            font: { size: fontSize },
+            font: { size: FONT_SIZE },
             padding: { top: 10, bottom: 10 },
           },
           ticks: {
@@ -205,7 +245,7 @@ function generateOptions(
           title: {
             display: true,
             text: yLabel,
-            font: { size: fontSize },
+            font: { size: FONT_SIZE },
             padding: { top: 10, bottom: 10 },
           },
         },

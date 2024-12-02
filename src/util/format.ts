@@ -21,19 +21,21 @@ export function formatDate(date: Date, timespan: Timespan): string {
   switch (timespan) {
     case "daily":
       return date.toLocaleString("en-US", {
-        month: "numeric",
-        day: "numeric",
+        month: "numeric", // UTC not used because we need accurate time
+        day: "2-digit",
         hour: "numeric",
         minute: "numeric",
       });
     case "monthly":
       return date.toLocaleString("en-US", {
+        timeZone: "UTC", // UTC used because the ES buckets use UTC (and sometimes cause the day to be 1 off)
         month: "numeric",
-        day: "numeric",
+        day: "2-digit",
         year: "numeric",
       });
     case "yearly":
       return date.toLocaleString("en-US", {
+        timeZone: "UTC", // UTC used because the ES buckets use UTC (and sometimes cause the day to be 1 off)
         month: "long",
         year: "numeric",
       });
