@@ -261,17 +261,25 @@ export async function getSSGReports(): Promise<GeneratedReports> {
   }
 
   // sanity check that sums are at least 0
-  if (
-    (ssgReport.dailySum.sumCpuHours &&
-      ssgReport.monthlySum.sumCpuHours &&
-      ssgReport.yearlySum.sumCpuHours &&
-      ssgReport.dailySum.sumJobs &&
-      ssgReport.monthlySum.sumJobs &&
-      ssgReport.yearlySum.sumJobs) === 0
-  ) {
-    console.error(ssgReport.dailySum);
+  if (!reportSanityCheck(ssgReport)) {
     throw new Error("Generated reports are empty");
   }
 
   return ssgReport;
+}
+
+export function reportSanityCheck(report: GeneratedReports) {
+  // check if any of the sums are 0
+  if (
+    (report.dailySum.sumCpuHours &&
+    report.monthlySum.sumCpuHours &&
+    report.yearlySum.sumCpuHours &&
+    report.dailySum.sumJobs &&
+    report.monthlySum.sumJobs &&
+    report.yearlySum.sumJobs) === 0
+  ) {
+    return false;
+  } else {
+    return true;
+  }
 }
