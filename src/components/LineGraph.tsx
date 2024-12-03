@@ -1,16 +1,11 @@
 import { Box } from "@mui/material";
 import React from "react";
-import useSWR from "swr";
 import { formatDate } from "../util/format";
-import {
-  AnalysisResult,
-  GeneratedReports,
-  generateReports,
-  Timespan,
-} from "../util/gracc";
+import { AnalysisResult, GeneratedReports, Timespan } from "../util/gracc";
 
-import { Chart } from "react-chartjs-2";
 import "chart.js/auto";
+import { Chart } from "react-chartjs-2";
+import { useGRACC } from "../util/useGracc";
 
 const FONT_SIZE = 18;
 const TITLE_FONT_SIZE = 24;
@@ -32,17 +27,7 @@ const LineGraph = ({
   timespan,
   chartRef,
 }: Props) => {
-  const { data, isLoading } = useSWR(
-    "generateReports",
-    async () => generateReports(),
-    {
-      fallbackData: fallback,
-      refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-    }
-  );
+  const { data, isLoading } = useGRACC(fallback);
 
   if (isLoading) {
     return (
@@ -197,9 +182,9 @@ function generateOptions(
                 )}`;
               } else {
                 // point of the scatter plot
-                return `${datasetLabel}: ${dataPoint.y.toLocaleString(
-                  "en-US"
-                )}`;
+                return `${datasetLabel}: ${Math.floor(
+                  dataPoint.y
+                ).toLocaleString("en-US")}`;
               }
             },
             title(tooltipItems): string | void {

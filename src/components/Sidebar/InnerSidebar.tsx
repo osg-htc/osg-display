@@ -1,11 +1,11 @@
 "use client";
 
-import { GeneratedReports, generateReports } from "@/src/util/gracc";
-import { Box } from "@mui/material";
-import useSWR from "swr";
-import style from "./InnerSidebar.module.css";
-import { Fragment, useEffect, useState } from "react";
 import { formatNumber } from "@/src/util/format";
+import { GeneratedReports } from "@/src/util/gracc";
+import { useGRACC } from "@/src/util/useGracc";
+import { Box } from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
+import style from "./InnerSidebar.module.css";
 
 type SidebarData = {
   title: string;
@@ -18,13 +18,7 @@ type Props = {
 };
 
 const InnerSidebar = ({ fallbackData }: Props) => {
-  const { data, isLoading } = useSWR("generateReports", async () => generateReports(), {
-    fallbackData,
-    refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateOnMount: true,
-  });
+  const { data, isLoading } = useGRACC(fallbackData);
 
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [tableElements, setTableElements] = useState<JSX.Element[]>([]);
