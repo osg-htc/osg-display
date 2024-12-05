@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Image from "next/image";
 import style from "./Header.module.css";
-import { Button, ButtonGroup, Link } from "@mui/material";
+import Link from "next/link";
+import { Button, ButtonGroup } from "@mui/material";
 
 const Header = () => {
   return (
