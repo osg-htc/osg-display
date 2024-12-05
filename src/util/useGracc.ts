@@ -12,6 +12,9 @@ export function useGRACC(fallbackData: GeneratedReports) {
       refreshInterval: 1000 * 60 * 3, // refresh every 3 minutes
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      revalidateOnMount: true,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
       shouldRetryOnError: false,
     }
   );

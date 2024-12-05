@@ -39,7 +39,7 @@ const InnerSidebar = ({ fallbackData }: Props) => {
       bgcolor="white"
       mx="auto"
     >
-      {isLoading ? (
+      {(isLoading || !data) ? (
         <></>
       ) : (
         <Box
