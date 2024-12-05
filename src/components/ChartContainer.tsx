@@ -96,6 +96,10 @@ const ChartContainer = ({
           timespan={timespan}
           chartRef={chartRef}
         />
+
+        <Box component="span" fontStyle="italic">
+          &mdash; Red Dot indicates an incomplete bucket
+        </Box>
       </Box>
     </Box>
   );
