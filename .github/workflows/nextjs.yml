@@ -89,8 +89,8 @@ jobs:
         with:
           path: ./out
 
-      - name: Keepalive workflow
-        uses: gautamkrishnar/keepalive-workflow@v2 # prevents action from being disabled every 60 days
+      #- name: Keepalive workflow
+      #  uses: gautamkrishnar/keepalive-workflow@v2 # prevents action from being disabled every 60 days
 
   # Deployment job
   deploy:
